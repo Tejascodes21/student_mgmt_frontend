@@ -1,6 +1,35 @@
-// TEMPORARY DATA
+// Role management
+interface User {
+  email: string;
+  role: 'admin' | 'teacher' | 'student' | 'parent';
+}
 
-export let role = "admin";
+export let role: User['role'] = 'admin';
+
+export const setRole = (newRole: User['role']) => {
+  role = newRole;
+};
+
+// Mock authentication function - replace with actual API call
+export const authenticateUser = async (email: string, password: string): Promise<User | null> => {
+  // This is a mock implementation. Replace with actual API call
+  const mockUsers: Record<string, User> = {
+    'admin@school.com': { email: 'admin@school.com', role: 'admin' },
+    'teacher@school.com': { email: 'teacher@school.com', role: 'teacher' },
+    'student@school.com': { email: 'student@school.com', role: 'student' },
+  };
+
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  const user = mockUsers[email];
+  if (user) {
+    setRole(user.role);
+    return user;
+  }
+
+  return null;
+};
 
 export const teachersData = [
   {
