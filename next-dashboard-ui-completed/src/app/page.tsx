@@ -8,27 +8,59 @@ import { useState } from 'react';
 // Configure Next.js Image component to accept external URLs
 const imageLoader = ({ src }: { src: string }) => src;
 
+/* 🔹 Reusable Login Card */
+const LoginCard = ({ href, color, icon, title, desc }: {
+  href: string,
+  color: string,
+  icon: React.ReactNode,
+  title: string,
+  desc: string
+}) => (
+  <Link href={href}>
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      className={`flex items-center p-4 bg-${color}-50 rounded-xl hover:bg-${color}-100 transition-colors cursor-pointer`}
+    >
+      <div className={`w-12 h-12 bg-${color}-100 rounded-lg flex items-center justify-center`}>
+        {icon}
+      </div>
+      <div className="ml-4">
+        <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
+        <p className="text-gray-600">{desc}</p>
+      </div>
+    </motion.div>
+  </Link>
+);
+
+/* 🔹 Reusable Feature Card */
+const FeatureCard = ({ icon, title, desc }: {
+  icon: React.ReactNode,
+  title: string,
+  desc: string
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6 }}
+    viewport={{ once: true }}
+    className="p-6 bg-white rounded-xl shadow-md"
+  >
+    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+      {icon}
+    </div>
+    <h3 className="text-xl font-semibold mb-3">{title}</h3>
+    <p className="text-gray-600">{desc}</p>
+  </motion.div>
+);
+
 const Homepage = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  const fadeIn = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, ease: "easeOut" }
-  };
-
-  const fadeInScale = {
-    initial: { opacity: 0, scale: 0.9 },
-    animate: { opacity: 1, scale: 1 },
-    transition: { duration: 0.5 }
-  };
 
   const staggerContainer = {
     initial: {},
     animate: {
-      transition: {
-        staggerChildren: 0.2
-      }
+      transition: { staggerChildren: 0.2 }
     }
   };
 
@@ -84,6 +116,7 @@ const Homepage = () => {
                       <button
                         onClick={() => setIsLoginModalOpen(false)}
                         className="text-gray-500 hover:text-gray-700"
+                        aria-label="Close login modal"
                       >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -93,59 +126,35 @@ const Homepage = () => {
                     <p className="text-gray-600 mb-6">Select your role to continue</p>
                     
                     <div className="space-y-4">
-                      <Link href="/sign-in?role=admin">
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="flex items-center p-4 bg-red-50 rounded-xl hover:bg-red-100 transition-colors cursor-pointer"
-                        >
-                          <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                            <svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                          </div>
-                          <div className="ml-4">
-                            <h3 className="text-xl font-semibold text-gray-800">Login as Admin</h3>
-                            <p className="text-gray-600">Access administrative dashboard</p>
-                          </div>
-                        </motion.div>
-                      </Link>
+                      <LoginCard 
+                        href="/sign-in?role=admin"
+                        color="red"
+                        title="Login as Admin"
+                        desc="Access administrative dashboard"
+                        icon={<svg className="w-6 h-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>}
+                      />
 
-                      <Link href="/sign-in?role=teacher">
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="flex items-center p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors cursor-pointer"
-                        >
-                          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                            </svg>
-                          </div>
-                          <div className="ml-4">
-                            <h3 className="text-xl font-semibold text-gray-800">Login as Teacher</h3>
-                            <p className="text-gray-600">Manage classes and attendance</p>
-                          </div>
-                        </motion.div>
-                      </Link>
+                      <LoginCard 
+                        href="/sign-in?role=teacher"
+                        color="blue"
+                        title="Login as Teacher"
+                        desc="Manage classes and attendance"
+                        icon={<svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>}
+                      />
 
-                      <Link href="/sign-in?role=student">
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="flex items-center p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-colors cursor-pointer"
-                        >
-                          <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                            <svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                          </div>
-                          <div className="ml-4">
-                            <h3 className="text-xl font-semibold text-gray-800">Login as Student</h3>
-                            <p className="text-gray-600">View attendance and schedules</p>
-                          </div>
-                        </motion.div>
-                      </Link>
+                      <LoginCard 
+                        href="/sign-in?role=student"
+                        color="green"
+                        title="Login as Student"
+                        desc="View attendance and schedules"
+                        icon={<svg className="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>}
+                      />
                     </div>
                   </motion.div>
                 </>
@@ -172,10 +181,7 @@ const Homepage = () => {
               Revolutionize education with AI-powered attendance tracking,
               blockchain security, and intelligent student management solutions.
             </p>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
                 href="/sign-in"
                 className="inline-flex items-center bg-blue-500 text-white px-8 py-3 rounded-full hover:bg-blue-600 transition-colors"
@@ -227,20 +233,29 @@ const Homepage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature Cards */}
-            <motion.div variants={fadeIn} className="p-6 bg-white rounded-xl shadow-md">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold mb-3">AI-Powered Attendance</h3>
-              <p className="text-gray-600">
-                Advanced facial recognition and smart tracking algorithms for accurate attendance management.
-              </p>
-            </motion.div>
+            <FeatureCard 
+              title="AI-Powered Attendance"
+              desc="Advanced facial recognition and smart tracking algorithms for accurate attendance management."
+              icon={<svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>}
+            />
 
-            {/* More feature cards... (similar structure) */}
+            <FeatureCard 
+              title="Blockchain Security"
+              desc="Immutable, tamper-proof records ensure transparency and trust in attendance data."
+              icon={<svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0-1.105.895-2 2-2h6a2 2 0 012 2v6a2 2 0 01-2 2h-6a2 2 0 01-2-2v-6zM4 7V5a2 2 0 012-2h6a2 2 0 012 2v2" />
+              </svg>}
+            />
+
+            <FeatureCard 
+              title="Smart Analytics"
+              desc="Gain insights with detailed reports, trends, and predictive analytics for student performance."
+              icon={<svg className="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 11V5a1 1 0 012 0v6h4a1 1 0 010 2h-4v6a1 1 0 01-2 0v-6H7a1 1 0 010-2h4z" />
+              </svg>}
+            />
           </div>
         </motion.div>
 
@@ -292,9 +307,10 @@ const Homepage = () => {
                 <li>Learning City, LC 12345</li>
               </ul>
             </div>
+
           </div>
 
-          <div className="max-w-7xl mx-auto px-6 pt-8 mt-8 border-t border-gray-800">
+          <div className="pt-8 mt-8 border-t border-gray-800">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-gray-400">© 2024 EduTrack. All rights reserved.</p>
               <div className="flex gap-6 text-gray-400">
